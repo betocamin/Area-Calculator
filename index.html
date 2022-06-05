@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Area Calculator</title>
+	<!-- bootstrap - link cdn -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body onload="createRow()";> <!-- creates the first row onload -->
+	<div class="container" id="main">
+		<div class="jumbotron">
+			<h1>Area Calculator</h1>
+			<p class="lead">This is a calculator for area and price with possibility to add/remove new rows.</p>
+			<hr>
+			<p>It has some input validations and uses bootstrap for laoyout, but has not mobile adjustments yet. Have fun!</p>
+			<button type="button" class="btn btn-primary btn-md" onclick="createRow()">add new row</button>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-md-1">Item</div>
+			<div class="col-md-1">Qtd</div>
+			<div class="col-md-2">Width</div>
+			<div class="col-md-2">Height</div>
+			<div class="col-md-2">Area</div>
+			<div class="col-md-1">$ Value</div>
+			<div class="col-md-3">$ Sub Total</div>
+		</div>
+	</div>
+	<div class="container" >
+		<hr />
+		<div class="row">
+			<div class="col-md-2 offset-md-6">Total Area</div>
+			<div class="col-md-2 offset-md-1">Total Amount</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2 offset-md-6"><input id="sumFootage" type="text" class="form-control" readonly /></div>
+			<div class="col-md-2 offset-md-1"><input id="sumAmount" type="text" class="form-control" readonly /></div>
+		</div>
+
+	</div>
+</body>
+<script type="text/javascript">
+	
+	var rows = 0;
+
+	function createRow() {
+		rows++;
+		var div = document.createElement("div");
+		div.setAttribute('class', 'row')
+		div.setAttribute('id', 'row_' + rows)
+		div.innerHTML = '<div class="col-md-1 item"><input id="row_' + rows + '" type="text" class="form-control" readonly value="' + rows + '"/></div><div class="col-md-1 item"><input id="qtd_' + rows + '" type="number" step="1" min="1" value="1" class="form-control" onchange="calculate(' + rows + ')" placeholder="Qtd"/></div><div class="col-md-2 item"><input id="width_' + rows + '" type="text" class="form-control" onblur="calculate(' + rows + ')"/></div><div class="col-md-2"><input id="height_' + rows + '" type="text" class="form-control" onblur="calculate(' + rows + ')"/></div><div class="col-md-2"><input id="footage_' + rows + '" type="text" class="form-control" name="footage" readonly/></div><div class="col-md-1"><input id="amount_' + rows + '" type="text" class="form-control" onblur="calculate(' + rows + ')" value="0"/></div><div class="col-md-2"><input id="subTotal_' + rows + '" type="text" class="form-control" readonly name="amount"/></div><div class="col-md-1"><button type="button" class="btn btn-md btn-outline-danger pull-right " onclick="removeRow(this.parentNode)">X</button></div><br /><br />';
+		document.getElementById("main").appendChild(div);
+
+	}
+
+	function removeRow(e) {
+		e.parentElement.remove();
+	}
+
+	function calculate(rows) {
+		var qtd = document.getElementById('qtd_' + rows).value;
+		var width = document.getElementById('width_' + rows).value;
+		var width = width.replace(/,/g, '.') //replace comma to dot
+		var height = document.getElementById('height_' + rows).value;
+		var height = height.replace(/,/g, '.') //replace comma to dot
+		var sumAmount = 0;
+
+		//variable type adjust
+		width = parseFloat(width);
+		height = parseFloat(height);
+
+
+		// // input number validation
+		if (isNaN(width)) {
+			document.getElementById('width_' + rows).classList.add('is-invalid'); //add invalid class to width input
+			document.getElementById('width_' + rows).focus(); //set focus to width input
+			return false;
+		}
+
+		if (isNaN(height)) {
+			document.getElementById('height_' + rows).classList.add('is-invalid'); //add invalid class to height input
+			document.getElementById('height_' + rows).focus(); //set focus to height input
+			return false;
+		}
+		
+		document.getElementById('width_' + rows).classList.remove('is-invalid'); //remove invalid class to width input
+		document.getElementById('height_' + rows).classList.remove('is-invalid'); //remove invalid class to height input
+
+		var footage = (width * height) * qtd;
+		document.getElementById('footage_' + rows).value = footage.toFixed(2);
+		var amount = document.getElementById('amount_' + rows).value;
+		var subTotal = amount * footage;
+		document.getElementById('subTotal_' + rows).value = subTotal.toFixed(2);
+
+		var arrFootage = document.getElementsByName('footage');
+		var arrAmount = document.getElementsByName('amount');
+		var sumFootage = 0;
+		var sumAmount = 0;
+
+		for (var i = 0; i < arrFootage.length; i++) {
+			sumFootage += parseFloat(arrFootage[i].value);
+			sumAmount += parseFloat(arrAmount[i].value);
+		}
+		document.getElementById('sumFootage').value = sumFootage.toFixed(2);
+		document.getElementById('sumAmount').value = sumAmount.toFixed(2);
+	}
+</script>
+</html>
