@@ -66,12 +66,12 @@
 		var height = height.replace(/,/g, '.') //replace comma to dot
 		var sumAmount = 0;
 
-		//variable type adjust
+		// variable type adjust
 		width = parseFloat(width);
 		height = parseFloat(height);
 
 
-		// nput number validation
+		// input number validation
 		if (isNaN(width)) {
 			document.getElementById('width_' + rows).classList.add('is-invalid'); //add invalid class to width input
 			document.getElementById('width_' + rows).focus(); //set focus to width input
@@ -87,14 +87,14 @@
 		document.getElementById('width_' + rows).classList.remove('is-invalid'); //remove invalid class to width input
 		document.getElementById('height_' + rows).classList.remove('is-invalid'); //remove invalid class to height input
 
-		//calculate footage area, amount and subtotal
+		// calculate footage area, amount and subtotal
 		var footage = (width * height) * qtd;
 		document.getElementById('footage_' + rows).value = footage.toFixed(2);
 		var amount = document.getElementById('amount_' + rows).value;
 		var subTotal = amount * footage;
 		document.getElementById('subTotal_' + rows).value = subTotal.toFixed(2);
 
-		//calculate total footages areas and sum of subtotals
+		// calculate total footages areas and sum of subtotals
 		var arrFootage = document.getElementsByName('footage');
 		var arrAmount = document.getElementsByName('amount');
 		var sumFootage = 0;
